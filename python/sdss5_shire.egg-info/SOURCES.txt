@@ -1,6 +1,5 @@
 LICENSE.md
 MANIFEST.in
-README.md
 setup.cfg
 setup.py
 python/sdss5_shire.egg-info/PKG-INFO

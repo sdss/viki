@@ -6,7 +6,8 @@ from logging import getLogger, ERROR
 import psycopg2
 from quart import Quart, render_template
 
-from shire import observatory, getTemplateDictBase
+from shire import observatory
+from shire.controllers import getTemplateDictBase
 
 getLogger('quart.serving').setLevel(ERROR)
 
