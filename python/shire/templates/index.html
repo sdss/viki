@@ -8,17 +8,67 @@
   <title>Metrics</title>
   <meta http-equiv="refresh" CONTENT="600"/>
 
+  <script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
 {% endblock head %}
 
 {% block body %}
 
-<!-- <div class="row">
-  <ul>
-    <li><h3><a href="/epochs.html">Epoch View</a></h3></li>
-    <li><h3><a href="/targets.html">Target Visits View (program)</a></h3></li>
-    <li><h3><a href="/cartons.html">Target Visits View (carton)</a></h3></li>
-  </ul>
-</div> -->
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      obs list
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div id="jd"></div>
+      <div id="lst"></div>
+      <div id="hz"></div>
+      <div id="alt"></div>
+      <div id="seeing"></div>
+    </div>
+  </div>
+</div>
 
+<script type="text/javascript">
+  function drawHist(dat, divName, label){
+    let hist = {
+      x: dat,
+      name: 'x density',
+      marker: {color: 'DodgerBlue'},
+      type: 'histogram'
+    };
+    let data = [hist];
+  
+    let layout = {
+      showlegend: false,
+      autosize: false,
+      width: 400,
+      height: 300,
+      margin: {t: 50},
+      title: label,
+      hovermode: 'closest',
+      bargap: 0,
+      xaxis: {
+        title: label,
+        showgrid: false,
+        zeroline: false
+      }
+    }
+    Plotly.newPlot(divName, data, layout);
+  };
+
+  var jd = {{jd | tojson}};
+  drawHist(jd, "jd", "jd");
+  var lst = {{lst | tojson}};
+  drawHist(lst, "lst", "lst");
+  var hz = {{hz | tojson}};
+  drawHist(hz, "hz", "hz");
+  var alt = {{alt | tojson}};
+  drawHist(alt, "alt", "alt");
+  // var seeing = {{seeing | tojson}};
+  // drawHist(seeing, "seeing", "seeing");
+
+</script>
 
 {% endblock body %}
