@@ -6,8 +6,8 @@ from logging import getLogger, ERROR
 import psycopg2
 from quart import Quart, render_template
 
-from shire import observatory
-from shire.controllers import getTemplateDictBase
+from viki import observatory
+from viki.controllers import getTemplateDictBase
 
 getLogger('quart.serving').setLevel(ERROR)
 
@@ -49,9 +49,9 @@ psycopg2.extensions.register_type(DECARRAY2FLOATARRAY)
 # -------------------
 # Register blueprints
 # -------------------
-from shire.controllers.index import index_page
+from viki.controllers.index import index_page
 
-from shire.controllers.local import localSource
+from viki.controllers.local import localSource
 
 app.register_blueprint(index_page)
 app.register_blueprint(localSource)

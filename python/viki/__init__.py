@@ -7,10 +7,10 @@ from functools import partial
 from sdsstools import get_config, get_logger, get_package_version
 
 # pip package name
-NAME = 'sdss5-shire'
+NAME = 'sdss5-viki'
 
 # Loads config. config name is the package name.
-config = get_config('sdss5-shire')
+config = get_config('sdss5-viki')
 
 # Inits the logging system as NAME. Only shell logging, and exception and warning catching.
 # File logging can be started by calling log.start_file_logger(path).  Filename can be different

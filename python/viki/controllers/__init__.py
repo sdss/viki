@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os
 
-from shire import __version__
+from viki import __version__
 from sdssdb import __version__ as dbVer
 
 

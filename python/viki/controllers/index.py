@@ -2,8 +2,8 @@
 
 from quart import render_template, Blueprint
 
-from shire import wrapBlocking
-from shire.dbConvenience import recentObs
+from viki import wrapBlocking
+from viki.dbConvenience import recentObs
 
 from . import getTemplateDictBase
 
