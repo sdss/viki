@@ -1,0 +1,60 @@
+{% set active_page = "summary" %}
+{% extends "layout.html" %}
+
+
+{% block head %}
+  <meta name="robots" content="noindex" />
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+  <title>Metrics</title>
+  <meta http-equiv="refresh" CONTENT="600"/>
+
+  <script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
+{% endblock head %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card card-nav-tabs">
+        <div class="card-header card-header-danger">
+          <h3>{{mjd}}</h3>
+        </div>
+        <table class="table" id="expTable" style="height: 300px; overflow-y:scroll; display:block;">
+          <thead>
+            <tr>
+              <th class="text-center">Tile ID</th>
+              <th class="text-center">Dither</th>
+            </tr>
+          </thead>
+          <tbody>
+        {% for dith in summary %}
+          <tr>
+            <td>{{dith[0]}}</td>
+            <td>{{dith[1]}}</td>
+          </tr>
+        {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <a>
+        <img class="card-img" src="https://pbs.twimg.com/media/FUSo1YDWQAcBRN7.jpg" width="400px">
+      </a>
+    {% for img in pngs %}
+    <div class="col-md-3">
+      <div class="card">
+        <a href="/store/{{img}}">
+          <img class="card-img" src="/store/{{img}}" width="300px">
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock body %}

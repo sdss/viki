@@ -15,7 +15,7 @@ app = Quart(__name__)
 
 print("{0}App '{1}' created.{2}".format('\033[92m', __name__, '\033[0m')) # to remove later
 
-STORE_FOLDER = f"/home/sdss5/tmp/metrics_plots/"
+STORE_FOLDER = f"/home/sdss5/tmp/qa_plots/"
 
 app.config.update({
     "STORE_FOLDER": STORE_FOLDER
@@ -52,9 +52,11 @@ psycopg2.extensions.register_type(DECARRAY2FLOATARRAY)
 from viki.controllers.index import index_page
 
 from viki.controllers.local import localSource
+from viki.controllers.summary import mjdSummary
 
 app.register_blueprint(index_page)
 app.register_blueprint(localSource)
+app.register_blueprint(mjdSummary)
 
 
 @app.errorhandler(404)
