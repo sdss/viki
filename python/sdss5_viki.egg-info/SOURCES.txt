@@ -1,0 +1,16 @@
+LICENSE.md
+MANIFEST.in
+setup.cfg
+setup.py
+python/sdss5_viki.egg-info/PKG-INFO
+python/sdss5_viki.egg-info/SOURCES.txt
+python/sdss5_viki.egg-info/dependency_links.txt
+python/sdss5_viki.egg-info/not-zip-safe
+python/sdss5_viki.egg-info/requires.txt
+python/sdss5_viki.egg-info/top_level.txt
+python/viki/__init__.py
+python/viki/app.py
+python/viki/dbConvenience.py
+python/viki/controllers/__init__.py
+python/viki/controllers/index.py
+python/viki/controllers/local.py

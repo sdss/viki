@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: sdss5-viki
+Version: 0.1.0a0
+Summary: webapp for showing sdss5 metrics
+Home-page: https://github.com/sdss/viki
+Author: John Donor
+Author-email: j.donor@tcu.edu
+License: BSD 3-Clause License
+Project-URL: Repository, https://github.com/sdss/viki
+Project-URL: Documentation, https://sdss5-viki.readthedocs.org
+Keywords: astronomy,software
+Classifier: Intended Audience :: Science/Research
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Documentation :: Sphinx
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+License-File: LICENSE.md

@@ -1,7 +1,8 @@
 # from peewee import fn, JOIN
 import pandas as pd
 
-from sdssdb.peewee.lvmdb.lvmopsdb import Observation, Weather
+from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather,
+                                          Tile, Dither)
 
 
 def recentObs(jd=None):
@@ -22,9 +23,14 @@ def recentObs(jd=None):
     return dataframe
 
 
-def tonight(jd):
+def queryTonight(jd):
     """
     return dither, completion, obs, for one night, 
     defined to be jd < obs.jd <= jd + 1
     """
-    return
+    dithers = Tile.select(Tile.tile_id, Dither.position)\
+                  .join(Dither)\
+                  .join(Observation)\
+                  .where(Observation.jd > jd -1)
+
+    return dithers.dicts()

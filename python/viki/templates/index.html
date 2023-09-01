@@ -16,15 +16,40 @@
 <div class="row">
   <div class="col-md-4">
     <div class="card">
-      obs list
+      <div class="card card-nav-tabs">
+        <div class="card-header card-header-danger">
+          <h3>{{mjd}}</h3>
+        </div>
+        <table class="table" id="expTable" style="height: 300px; overflow-y:scroll; display:block;">
+          <thead>
+            <tr>
+              <th class="text-center">Tile ID</th>
+              <th class="text-center">Dither</th>
+            </tr>
+          </thead>
+          <tbody>
+        {% for dith in summary %}
+          <tr>
+            <td>{{dith[0]}}</td>
+            <td>{{dith[1]}}</td>
+          </tr>
+        {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+
   <div class="col-md-4">
     <div class="card">
       <div id="jd"></div>
       <div id="lst"></div>
-      <div id="hz"></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
       <div id="alt"></div>
+      <div id="hz"></div>
       <div id="seeing"></div>
     </div>
   </div>
