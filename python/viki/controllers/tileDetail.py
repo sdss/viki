@@ -13,7 +13,7 @@ tileDetail_page = Blueprint("tileDetail_page", __name__)
 
 @tileDetail_page.route('/tileDetail.html', methods=['GET'])
 async def tile():
-    """ Index page. """
+    """ Tile page. """
     templateDict = getTemplateDictBase()
 
     tile_id = int(request.args["tile_id"])

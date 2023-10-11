@@ -57,3 +57,31 @@ def tileInfo(tile_id):
                   .where(Tile.tile_id == tile_id)
 
     return tile, dithers.dicts()
+
+
+def findTiles(ra=None, dec=None, radius=None, tile_ids=None):
+    """
+    return tiles matching criteria
+    """
+    
+    redFlag = True
+
+    tileQuery = Tile.select(Tile.tile_id, Tile.target,
+                            Tile.ra, Tile.dec)
+
+    if ra and dec and radius:
+        redFlag = False
+        tileQuery = tileQuery.where(Tile.cone_search(ra, dec, radius))
+
+    if tile_ids and type(tile_ids) is list:
+        redFlag = False
+        tileQuery = tileQuery.where(Tile.tile_id << tile_ids)
+    
+    if redFlag:
+        tileQuery = tileQuery.limit(10)
+    else:
+        tileQuery = tileQuery.limit(50)
+    
+    tiles = tileQuery.dicts()
+
+    return tiles

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% set active_page = "tileQuery" %}
+
+{% block head %}
+  <meta name="robots" content="noindex" />
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+  <title>Tile Query</title>
+  <meta http-equiv="refresh" CONTENT="600"/>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font: 16px Arial;  
+  }
+
+  /*the container must be positioned relative:*/
+  .autocomplete {
+    position: relative;
+    display: inline-block;
+  }
+
+  input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  input[type=text] {
+    background-color: #f1f1f1;
+    width: 100%;
+  }
+
+  input[type=submit] {
+    background-color: DodgerBlue;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff; 
+    border-bottom: 1px solid #d4d4d4; 
+  }
+
+  /*when hovering an item:*/
+  .autocomplete-items div:hover {
+    background-color: #e9e9e9; 
+  }
+
+  /*when navigating through the items using the arrow keys:*/
+  .autocomplete-active {
+    background-color: DodgerBlue !important; 
+    color: #ffffff; 
+  }
+</style>
+
+{% endblock head %}
+
+{% block body %}
+
+<div class="card">
+<form autocomplete="off" action="/tileQuery.html">
+  <div class="form-row">
+    <div class="form-group col-md-10">
+      <label for="tiles">Tile IDs (comma seperated)</label>
+      <input id="tiles" name="tiles" type="text" class="form-control" {% if tile_ids|length > 0 %} value="{% for t in tile_ids %}{{t}}, {% endfor %}"{% endif %}>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="form-group col-md-3">
+        <label for="ra">RA</label>
+        <input id="ra" type="text" name="ra" value="{{ra}}">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="dec">Dec</label>
+        <input id="dec" type="text" name="dec" value="{{dec}}">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="radius">Search Radius</label>
+        <input id="radius" type="text" name="radius" value="{{radius}}">
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit Query</button>
+</form>
+</div>
+
+
+<div class="card card-nav-tabs">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Tile ID</th>
+        <th>Target</th>
+        <th>RA</th>
+        <th>Dec</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tile in tiles %}
+        <tr>
+          <td><a href="tileDetail.html?tile_id={{tile.tile_id}}">{{tile.tile_id}}</a></td>
+          <td>{{tile.target}}</td>
+          <td>{{"%7.3f" % tile.ra}}</td>
+          <td>{{"%7.3f" % tile.dec}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock body %}
