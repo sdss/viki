@@ -35,3 +35,25 @@ def queryTonight(jd):
                   .where(Observation.jd > jd -1)
 
     return dithers.dicts()
+
+
+def tileInfo(tile_id):
+    """
+    return tile level info
+    """
+
+    tile = Tile.get(tile_id=tile_id)
+
+    tile = {"tile_id": tile.tile_id,
+            "ra": tile.ra,
+            "dec": tile.dec,
+            "pa": tile.pa,
+            "target": tile.target}
+
+    dithers = Tile.select(Tile.tile_id, Dither.position,
+                          Observation.jd)\
+                  .join(Dither)\
+                  .join(Observation)\
+                  .where(Tile.tile_id == tile_id)
+
+    return tile, dithers.dicts()

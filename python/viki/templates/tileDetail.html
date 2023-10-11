@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% set active_page = "tileDetail" %}
+
+{% block head %}
+  <meta name="robots" content="noindex" />
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+  <title>Tile {{tile.tile_id}}</title>
+  <meta http-equiv="refresh" CONTENT="600"/>
+
+  {#  ${header("Design Detail")} #}
+{% endblock head %}
+
+{% block body %}
+
+
+<div class="well">
+  <div class="row">
+    <div class="col-lg-3">
+      <div align=center>
+        <h2>Tile {{tile.tile_id}}</h2>
+        <h4>RA: {{"%.2f" % tile.ra}}, Dec: {{"%.2f" % tile.dec}}, PA: {{"%.2f" % tile.pa}}</h4>
+        <h4>Target: {{tile.target}}</h4>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <div>
+        <h2>Dither Observations</h2>
+        <table class="table" style="display:block;">
+          <thead>
+            <tr>
+              <th class="text-center">Dither Pos</th>
+              <th class="text-center">MJD</th>
+            </tr>
+          </thead>
+          <tbody style="height: 200px; overflow-y:scroll;">
+        {% for d in dithers %}
+            <tr>
+              <td class="text-center">{{d[0]}}</td>
+              <td class="text-center">{{d[1]}}</td>
+            </tr>
+        {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+    .xaxis text {
+      font: 12px sans-serif;
+    }
+
+    .xaxis line,
+    .xaxis path {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+</style>
+
+{% endblock body %}
