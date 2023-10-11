@@ -22,7 +22,7 @@ async def summary():
     jd = mjd + 2400000.5
     tonight = await wrapBlocking(queryTonight, jd=jd)
 
-    summary = [[t["tile_id"], t["position"]] for t in tonight]
+    summary = [[t["tile_id"], t["position"], t["target"]] for t in tonight]
 
     imgdir = current_app.config["STORE_FOLDER"]
     pngs = await wrapBlocking(listdir, imgdir)

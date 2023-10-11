@@ -28,7 +28,8 @@ def queryTonight(jd):
     return dither, completion, obs, for one night, 
     defined to be jd < obs.jd <= jd + 1
     """
-    dithers = Tile.select(Tile.tile_id, Dither.position)\
+    dithers = Tile.select(Tile.tile_id, Tile.target,
+                          Dither.position)\
                   .join(Dither)\
                   .join(Observation)\
                   .where(Observation.jd > jd -1)

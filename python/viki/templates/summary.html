@@ -25,6 +25,7 @@
             <tr>
               <th class="text-center">Tile ID</th>
               <th class="text-center">Dither</th>
+              <th class="text-center">Target</th>
             </tr>
           </thead>
           <tbody>
@@ -32,6 +33,7 @@
           <tr>
             <td>{{dith[0]}}</td>
             <td>{{dith[1]}}</td>
+            <td>{{dith[2]}}</td>
           </tr>
         {% endfor %}
           </tbody>
@@ -41,9 +43,6 @@
   </div>
 
   <div class="col-md-4">
-    <a>
-        <img class="card-img" src="https://pbs.twimg.com/media/FUSo1YDWQAcBRN7.jpg" width="400px">
-      </a>
     {% for img in pngs %}
     <div class="col-md-3">
       <div class="card">

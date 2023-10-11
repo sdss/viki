@@ -28,7 +28,7 @@ async def index():
 
     tonight = await wrapBlocking(queryTonight, jd=jd)
 
-    summary = [[t["tile_id"], t["position"]] for t in tonight]
+    summary = [[t["tile_id"], t["position"], t["target"]] for t in tonight]
 
     obs = await wrapBlocking(recentObs)
 
