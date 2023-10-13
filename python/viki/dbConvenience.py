@@ -1,8 +1,8 @@
-# from peewee import fn, JOIN
+from peewee import fn
 import pandas as pd
 
 from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather,
-                                          Tile, Dither)
+                                          Tile, Dither, CompletionStatus)
 
 
 def recentObs(jd=None):
@@ -85,3 +85,19 @@ def findTiles(ra=None, dec=None, radius=None, tile_ids=None):
     tiles = tileQuery.dicts()
 
     return tiles
+
+
+def doneTiles():
+    """grab everything that's done
+    """
+
+    hist = Tile.select(Tile.tile_id, Tile.target,
+                       Dither.pk, fn.Max(Observation.jd).alias("jd"))\
+                   .join(Dither)\
+                   .join(CompletionStatus)\
+                   .switch(Dither)\
+                   .join(Observation)\
+                   .where(CompletionStatus.done)\
+                   .group_by(Tile.tile_id, Tile.target,
+                             Dither.pk).dicts()
+    return hist

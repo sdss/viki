@@ -1,0 +1,44 @@
+{% set active_page = "progress" %}
+{% extends "layout.html" %}
+
+{% block head %}
+  <meta name="robots" content="noindex" />
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+  <title>Progress</title>
+{% endblock head %}
+
+{% block body %}
+
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div id="allTargs"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+    Highcharts.chart("allTargs", {
+    chart: { zoomType: 'x' },
+    title: {text: "Title"},
+    xAxis: { title: { text: 'MJD' } },
+    yAxis: [{ title: { text: 'Dithers' },
+                    plotLines: [{ value: 0, width: 1, color: '#bf371f' }]}],
+    tooltip: { crosshairs: true, shared: true },
+    series: [
+      {% for targ in cumulative %}
+      {
+      name: '{{targ}}',
+      data: {{cumulative[targ] | tojson}},
+      showInLegend: false, 
+      },
+      {% endfor %}
+    ]
+    });
+
+
+</script>
+
+{% endblock body %}

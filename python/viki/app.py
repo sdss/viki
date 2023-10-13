@@ -55,12 +55,14 @@ from viki.controllers.local import localSource
 from viki.controllers.summary import mjdSummary
 from viki.controllers.tileDetail import tileDetail_page
 from viki.controllers.tileQuery import tileQuery_page
+from viki.controllers.progress import progress_page
 
 app.register_blueprint(index_page)
 app.register_blueprint(localSource)
 app.register_blueprint(mjdSummary)
 app.register_blueprint(tileDetail_page)
 app.register_blueprint(tileQuery_page)
+app.register_blueprint(progress_page)
 
 
 @app.errorhandler(404)
