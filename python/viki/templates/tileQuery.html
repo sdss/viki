@@ -88,15 +88,15 @@
     <div class="form-group col-md-6">
       <div class="form-group col-md-3">
         <label for="ra">RA</label>
-        <input id="ra" type="text" name="ra" value={% if ra %} value="{{ra}}"{% endif %}>
+        <input id="ra" type="text" name="ra" value={% if ra %}"{{ra}}"{% endif %}>
       </div>
       <div class="form-group col-md-3">
         <label for="dec">Dec</label>
-        <input id="dec" type="text" name="dec" value={% if dec %} value="{{dec}}"{% endif %}>
+        <input id="dec" type="text" name="dec" value={% if dec %}"{{dec}}"{% endif %}>
       </div>
       <div class="form-group col-md-3">
         <label for="radius">Search Radius</label>
-        <input id="radius" type="text" name="radius" value={% if radius %} value="{{radius}}"{% endif %}>
+        <input id="radius" type="text" name="radius" value={% if radius %} {{radius}}"{% endif %}>
       </div>
     </div>
   </div>
