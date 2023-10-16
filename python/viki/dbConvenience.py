@@ -1,4 +1,4 @@
-from peewee import fn
+from peewee import fn, JOIN
 import pandas as pd
 
 from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather, Exposure,
@@ -32,7 +32,7 @@ def queryTonight(jd):
                           Dither.position)\
                   .join(Dither)\
                   .join(Observation)\
-                  .where(Observation.jd > jd -1)
+                  .where(Observation.jd > jd - 1)
 
     return dithers.dicts()
 
@@ -67,8 +67,19 @@ def findTiles(ra=None, dec=None, radius=None, tile_ids=None):
     
     redFlag = True
 
+    tile_alias = Tile.alias()
+
+    dithersDone = Dither.select(fn.count(CompletionStatus.pk))\
+                        .join(CompletionStatus, JOIN.LEFT_OUTER)\
+                        .switch(Dither).join(tile_alias, JOIN.LEFT_OUTER)\
+                        .where(CompletionStatus.done,
+                               tile_alias.tile_id == Tile.tile_id).alias("done")
+
     tileQuery = Tile.select(Tile.tile_id, Tile.target,
-                            Tile.ra, Tile.dec)
+                            Tile.ra, Tile.dec,
+                            Tile.total_exptime,
+                            dithersDone)
+
 
     if ra and dec and radius:
         redFlag = False
@@ -94,11 +105,11 @@ def doneTiles():
 
     hist = Tile.select(Tile.tile_id, Tile.target,
                        Dither.pk, fn.Max(Observation.jd).alias("jd"))\
-                   .join(Dither)\
-                   .join(CompletionStatus)\
-                   .switch(Dither)\
-                   .join(Observation)\
-                   .where(CompletionStatus.done)\
-                   .group_by(Tile.tile_id, Tile.target,
-                             Dither.pk).dicts()
+               .join(Dither)\
+               .join(CompletionStatus)\
+               .switch(Dither)\
+               .join(Observation)\
+               .where(CompletionStatus.done)\
+               .group_by(Tile.tile_id, Tile.target,
+                         Dither.pk).dicts()
     return hist

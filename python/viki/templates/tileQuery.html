@@ -113,6 +113,7 @@
         <th>Target</th>
         <th>RA</th>
         <th>Dec</th>
+        <th>Done</th>
       </tr>
     </thead>
     <tbody>
@@ -122,6 +123,7 @@
           <td>{{tile.target}}</td>
           <td>{{"%7.3f" % tile.ra}}</td>
           <td>{{"%7.3f" % tile.dec}}</td>
+          <td {% if tile.done %}style="color:green"{% endif %}>{{tile.done}} of {{tile.total_exptime}}</td>
         </tr>
       {% endfor %}
     </tbody>

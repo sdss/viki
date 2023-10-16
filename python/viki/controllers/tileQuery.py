@@ -44,13 +44,9 @@ async def tile():
 
     tiles = await wrapBlocking(findTiles, ra=ra, dec=dec,
                                radius=radius, tile_ids=tile_ids)
-    
-    # if ra is None:
-    #     ra = 0.0
-    # if dec is None:
-    #     dec = 0.0
-    # if radius is None:
-    #     radius = 1.0
+
+    for t in tiles:
+        t["total_exptime"] = int(t["total_exptime"] / 900)
 
     templateDict = getTemplateDictBase()
 
