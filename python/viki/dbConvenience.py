@@ -32,7 +32,8 @@ def queryTonight(jd):
                           Dither.position)\
                   .join(Dither)\
                   .join(Observation)\
-                  .where(Observation.jd > jd - 1)
+                  .where(Observation.jd > jd,
+                         Observation.jd < jd + 1)
 
     return dithers.dicts()
 
