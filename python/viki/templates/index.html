@@ -14,7 +14,32 @@
 {% block body %}
 
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-2">
+    <div class="card">
+      <div class="card card-nav-tabs">
+        <div class="card-header card-header-danger">
+          <h3>Recent MJDS</h3>
+        </div>
+        <table class="table" id="expTable" style="height: 300px; overflow-y:scroll; display:block;">
+          <thead>
+            <tr>
+              <th class="text-center">MJD</th>
+              <th class="text-center">N observations</th>
+            </tr>
+          </thead>
+          <tbody>
+        {% for s in recentMjds %}
+          <tr>
+            <td><a href="/summary.html?mjd={{mjd}}">{{s[0]}}</a></td>
+            <td>{{s[1]}}</td>
+          </tr>
+        {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
     <div class="card">
       <div class="card card-nav-tabs">
         <div class="card-header card-header-danger">

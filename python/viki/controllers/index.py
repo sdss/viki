@@ -3,6 +3,7 @@
 from quart import render_template, Blueprint
 
 from astropy.time import Time
+import numpy as np
 
 from viki import wrapBlocking
 from viki.dbConvenience import recentObs, queryTonight
@@ -32,6 +33,15 @@ async def index():
 
     obs = await wrapBlocking(recentObs)
 
+    mjds = np.array([int(i - 2400000.5) for i in obs["jd"]])
+
+    mjds = mjds[np.where(mjds > sjd_ish - 30)]
+
+    mjds, counts = np.unique(mjds, return_counts=True)
+
+    recentMjds = [[m, c] for m, c in zip (mjds, counts)]
+    recentMjds.reverse()
+
     templateDict.update({
         "jd": [i for i in obs["jd"]],
         "lst": [i for i in obs["lst"]],
@@ -39,7 +49,8 @@ async def index():
         "alt": [i for i in obs["alt"]],
         "seeing": [i for i in obs["seeing"]],
         "summary": summary,
-        "mjd": sjd_ish
+        "mjd": sjd_ish,
+        "recentMjds": recentMjds
     })
 
     return await render_template("index.html", **templateDict)
