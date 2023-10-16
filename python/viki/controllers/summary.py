@@ -5,7 +5,7 @@ from os import listdir
 from quart import render_template, Blueprint, request, current_app
 
 from viki import wrapBlocking
-from viki.dbConvenience import recentObs, queryTonight
+from viki.dbConvenience import queryTonight
 
 from . import getTemplateDictBase
 
