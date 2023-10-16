@@ -20,7 +20,10 @@ async def tile():
     
     tile, dithers = await wrapBlocking(tileInfo, tile_id)
 
-    dithers = [[t["position"], int(t["jd"] - 2400000.5)] for t in dithers]
+    dithers = [[t["position"],
+                int(t["jd"] - 2400000.5),
+                t["exposure_no"]] 
+                for t in dithers]
 
     templateDict.update({"tile": tile,
                          "dithers": dithers

@@ -1,7 +1,7 @@
 from peewee import fn
 import pandas as pd
 
-from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather,
+from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather, Exposure,
                                           Tile, Dither, CompletionStatus)
 
 
@@ -51,9 +51,10 @@ def tileInfo(tile_id):
             "target": tile.target}
 
     dithers = Tile.select(Tile.tile_id, Dither.position,
-                          Observation.jd)\
+                          Observation.jd, Exposure.exposure_no)\
                   .join(Dither)\
                   .join(Observation)\
+                  .join(Exposure)\
                   .where(Tile.tile_id == tile_id)
 
     return tile, dithers.dicts()
