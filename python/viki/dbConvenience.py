@@ -104,13 +104,13 @@ def doneTiles():
     """grab everything that's done
     """
 
-    hist = Tile.select(Tile.tile_id, Tile.target,
-                       Dither.pk, fn.Max(Observation.jd).alias("jd"))\
-               .join(Dither)\
-               .join(CompletionStatus)\
+    hist = Tile.select(Tile.tile_id, Tile.target, Tile.ra, Tile.dec,
+                       Dither.pk, CompletionStatus.done,
+                       fn.Max(Observation.jd).alias("jd"))\
+               .join(Dither, JOIN.LEFT_OUTER)\
+               .join(CompletionStatus, JOIN.LEFT_OUTER)\
                .switch(Dither)\
-               .join(Observation)\
-               .where(CompletionStatus.done)\
+               .join(Observation, JOIN.LEFT_OUTER)\
                .group_by(Tile.tile_id, Tile.target,
-                         Dither.pk).dicts()
+                         Dither.pk, CompletionStatus.done).dicts()
     return hist

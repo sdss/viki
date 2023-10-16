@@ -19,8 +19,18 @@ async def progress():
 
     # actually done dithers, so x9 for some tiles
     done = await wrapBlocking(doneTiles)
+
+    print(len(done))
     
     "MW*", "SMC*", "LMC*", "ORION*", "Gum*"
+
+    targ_counts ={
+        "MW": 0,
+        "MCs": 0,
+        "ORI": 0,
+        "GUM": 0,
+        "LV": 0
+    }
 
     targ_mjds = {
         "MW": [],
@@ -44,6 +54,9 @@ async def progress():
             targ = "GUM"
         else:
             targ = "LV"
+        targ_counts[targ] += 1
+        if not d["jd"]:
+            continue
         mjd = d["jd"] - 2400000.5
         if mjd < min_mjd:
             min_mjd = mjd
@@ -55,14 +68,19 @@ async def progress():
     x_axis = [int(m) for m in x_axis]
 
     cumulative = {}
+    fractional = {}
 
     for k, v in targ_mjds.items():
         mjds = np.array(v)
         counts = [[m, len(np.where(mjds < m)[0])] for m in x_axis]
         cumulative[k] = counts
+        planned = targ_counts[k]
+        frac = [[m, len(np.where(mjds < m)[0])/planned] for m in x_axis]
+        fractional[k] = frac
 
     templateDict.update({
-        "cumulative": cumulative
+        "cumulative": cumulative,
+        "fractional": fractional
     })
 
     return await render_template("progress.html", **templateDict)
