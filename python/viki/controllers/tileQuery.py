@@ -33,21 +33,24 @@ async def tile():
                     errors.append("invalid design input")
                     tile_ids = list()
         if "ra" in request.args:
-            ra = float(request.args["ra"])
-            dec = float(request.args["dec"])
-            radius = float(request.args["radius"])
+            try:
+                ra = float(request.args["ra"])
+                dec = float(request.args["dec"])
+                radius = float(request.args["radius"])
+            except ValueError:
+                ra = None
+                dec = None
+                radius = None
 
     tiles = await wrapBlocking(findTiles, ra=ra, dec=dec,
                                radius=radius, tile_ids=tile_ids)
     
-    print(tile_ids)
-
-    if ra is None:
-        ra = 0.0
-    if dec is None:
-        dec = 0.0
-    if radius is None:
-        radius = 1.0
+    # if ra is None:
+    #     ra = 0.0
+    # if dec is None:
+    #     dec = 0.0
+    # if radius is None:
+    #     radius = 1.0
 
     templateDict = getTemplateDictBase()
 
