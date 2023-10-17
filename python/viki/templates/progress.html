@@ -75,12 +75,55 @@
       {
       name: '{{targ}}',
       data: {{fractional[targ] | tojson}},
-      showInLegend: true,
+      showInLegend: true
       },
       {% endfor %}
     ]
     });
 
+    Highcharts.chart('map', {
+      chart: { type: 'scatter', zoomType: 'xy'},
+      title: {text: '', align: 'center'},
+      xAxis: {title: {text: 'RA'}, min: 0, max: 360, reverse: true, tickInterval: 90},
+      yAxis: {title: {text: 'Dec'}, min: -90, max: 90, tickInterval: 30},
+      legend: {enabled: true},
+      plotOptions: {
+        scatter: {
+          marker: {
+            radius: 2.5,
+            symbol: 'circle',
+            states: {
+              hover: {
+                enabled: true,
+                lineColor: 'rgb(100,100,100)'
+              }
+            }
+          },
+          states: {
+            hover: {
+              marker: {
+                enabled: false
+              }
+            }
+          },
+        }
+      },
+      tooltip: {
+        pointFormat: 'RA: {point.x.toFixed(1)} deg <br/> Dec: {point.y.toFixed(1)} deg'
+      },
+      series: [
+        {% for targ in targ_coords %} 
+        {
+          name: '{{targ}}',
+          id: '{{targ}}',
+          marker: {
+            symbol: 'circle'
+          },
+          data : {{targ_coords[targ] | tojson}}
+        },
+        {% endfor %}
+      ]
+    });
 
 </script>
 

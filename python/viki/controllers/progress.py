@@ -40,6 +40,14 @@ async def progress():
         "LV": []
     }
 
+    targ_coords = {
+        "MW": [],
+        "MCs": [],
+        "ORI": [],
+        "GUM": [],
+        "LV": []
+    }
+
     min_mjd = 99999
     max_mjd = 0
 
@@ -63,6 +71,7 @@ async def progress():
         if mjd > max_mjd:
             max_mjd = mjd
         targ_mjds[targ].append(mjd)
+        targ_coords[targ].append([d["ra"], d["dec"]])
     
     x_axis = np.arange(min_mjd, max_mjd, 1)
     x_axis = [int(m) for m in x_axis]
@@ -80,7 +89,8 @@ async def progress():
 
     templateDict.update({
         "cumulative": cumulative,
-        "fractional": fractional
+        "fractional": fractional,
+        "targ_coords": targ_coords
     })
 
     return await render_template("progress.html", **templateDict)
