@@ -74,8 +74,7 @@
       {% for targ in fractional %}
       {
       name: '{{targ}}',
-      data: {{fractional[targ] | tojson}},
-      showInLegend: true
+      data: {{fractional[targ] | tojson}}
       },
       {% endfor %}
     ]
@@ -109,7 +108,13 @@
         }
       },
       tooltip: {
-        pointFormat: 'RA: {point.x.toFixed(1)} deg <br/> Dec: {point.y.toFixed(1)} deg'
+        // pointFormat: 'RA: {point.x} deg <br/> Dec: {point.y} deg'
+        formatter:function(){
+          let label = this.series.name 
+                      + ' </br> Tile ID ' + this.point.name
+                      + ' </br> RA: ' + this.x.toFixed(1)
+                      + '</br> Dec: ' + this.y.toFixed(1)
+          return label;}
       },
       series: [
         {% for targ in targ_coords %} 
@@ -119,7 +124,22 @@
           marker: {
             symbol: 'circle'
           },
-          data : {{targ_coords[targ] | tojson}}
+          data : {{targ_coords[targ] | tojson}},
+          showInLegend: true
+        },
+        {% endfor %}
+        {% for targ in targ_coords_all %} 
+        {
+          enableMouseTracking: false,
+          name: '{{targ}}',
+          id: '{{targ}}',
+          marker: {
+            symbol: 'circle',
+            fillColor: 'rgba(0,0,0,0.1)',
+            radius: 1
+          },
+          data : {{targ_coords_all[targ] | tojson}},
+          showInLegend: false
         },
         {% endfor %}
       ]

@@ -29,7 +29,6 @@ async def progress():
         "MCs": 0,
         "ORI": 0,
         "FULLSKY": 0,
-        "THOR": 0,
         "GUM": 0,
         "LV": 0
     }
@@ -39,7 +38,6 @@ async def progress():
         "MCs": [],
         "ORI": [],
         "FULLSKY": [],
-        "THOR": [],
         "GUM": [],
         "LV": []
     }
@@ -49,7 +47,6 @@ async def progress():
         "MCs": [],
         "ORI": [],
         "FULLSKY": [],
-        "THOR": [],
         "GUM": [],
         "LV": []
     }
@@ -59,7 +56,6 @@ async def progress():
         "MCs": [],
         "ORI": [],
         "FULLSKY": [],
-        "THOR": [],
         "GUM": [],
         "LV": []
     }
@@ -68,7 +64,7 @@ async def progress():
     max_mjd = 0
 
     for d in done:
-        if "MW" in d["target"]:
+        if "MW" in d["target"] or "THOR" in d["target"]:
             targ = "MW"
         elif "MC" in d["target"]:
             targ = "MCs"
@@ -76,14 +72,13 @@ async def progress():
             targ = "ORI"
         elif "FULLSKY" in d["target"]:
             targ = "FULLSKY"
-        elif "THOR" in d["target"]:
-            targ = "THOR"
         elif "Gum" in d["target"]:
             targ = "GUM"
         else:
             targ = "LV"
         targ_counts[targ] += int(d["total_exptime"]/900)
-        targ_coords_all[targ].append([d["ra"], d["dec"]])
+        if targ != "FULLSKY":
+            targ_coords_all[targ].append([d["ra"], d["dec"]])
         if not d["jd"]:
             continue
         mjd = d["jd"] - 2400000.5
@@ -92,8 +87,8 @@ async def progress():
         if mjd > max_mjd:
             max_mjd = mjd
         targ_mjds[targ].append(mjd)
-        targ_coords[targ].append([d["ra"], d["dec"]])
-    
+        targ_coords[targ].append({"x": d["ra"], "y": d["dec"], "name": d["tile_id"]})
+
     x_axis = np.arange(min_mjd, max_mjd, 1)
     x_axis = [int(m) for m in x_axis]
 
@@ -111,7 +106,8 @@ async def progress():
     templateDict.update({
         "cumulative": cumulative,
         "fractional": fractional,
-        "targ_coords": targ_coords
+        "targ_coords": targ_coords,
+        "targ_coords_all": targ_coords_all
     })
 
     return await render_template("progress.html", **templateDict)
