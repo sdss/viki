@@ -28,6 +28,8 @@ async def progress():
         "MW": 0,
         "MCs": 0,
         "ORI": 0,
+        "FULLSKY": 0,
+        "THOR": 0,
         "GUM": 0,
         "LV": 0
     }
@@ -36,6 +38,8 @@ async def progress():
         "MW": [],
         "MCs": [],
         "ORI": [],
+        "FULLSKY": [],
+        "THOR": [],
         "GUM": [],
         "LV": []
     }
@@ -44,6 +48,18 @@ async def progress():
         "MW": [],
         "MCs": [],
         "ORI": [],
+        "FULLSKY": [],
+        "THOR": [],
+        "GUM": [],
+        "LV": []
+    }
+
+    targ_coords_all = {
+        "MW": [],
+        "MCs": [],
+        "ORI": [],
+        "FULLSKY": [],
+        "THOR": [],
         "GUM": [],
         "LV": []
     }
@@ -58,11 +74,16 @@ async def progress():
             targ = "MCs"
         elif "ORI" in d["target"]:
             targ = "ORI"
+        elif "FULLSKY" in d["target"]:
+            targ = "FULLSKY"
+        elif "THOR" in d["target"]:
+            targ = "THOR"
         elif "Gum" in d["target"]:
             targ = "GUM"
         else:
             targ = "LV"
-        targ_counts[targ] += 1
+        targ_counts[targ] += int(d["total_exptime"]/900)
+        targ_coords_all[targ].append([d["ra"], d["dec"]])
         if not d["jd"]:
             continue
         mjd = d["jd"] - 2400000.5

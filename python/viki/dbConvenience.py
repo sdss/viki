@@ -105,6 +105,7 @@ def doneTiles():
     """
 
     hist = Tile.select(Tile.tile_id, Tile.target, Tile.ra, Tile.dec,
+                       Tile.total_exptime,
                        Dither.pk, CompletionStatus.done,
                        fn.Max(Observation.jd).alias("jd"))\
                .join(Dither, JOIN.LEFT_OUTER)\
