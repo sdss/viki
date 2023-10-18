@@ -19,8 +19,6 @@ async def progress():
 
     # actually done dithers, so x9 for some tiles
     done = await wrapBlocking(doneTiles)
-
-    print(len(done))
     
     "MW*", "SMC*", "LMC*", "ORION*", "Gum*"
 
