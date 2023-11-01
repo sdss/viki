@@ -1,8 +1,11 @@
+import os
+
 from peewee import fn, JOIN
 import pandas as pd
 
 from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather, Exposure,
-                                          Tile, Dither, CompletionStatus)
+                                          Tile, Dither, CompletionStatus,
+                                          Version)
 
 
 def recentObs(jd=None):
@@ -89,6 +92,9 @@ def findTiles(ra=None, dec=None, radius=None, tile_ids=None):
     if tile_ids and type(tile_ids) is list:
         redFlag = False
         tileQuery = tileQuery.where(Tile.tile_id << tile_ids)
+    else:
+        ver = Version.get(label=os.getenv("TILE_VER"))
+        tileQuery = tileQuery.where(Tile.version_pk == ver.pk)
     
     if redFlag:
         tileQuery = tileQuery.limit(10)
@@ -104,6 +110,8 @@ def doneTiles():
     """grab everything that's done
     """
 
+    ver = Version.get(label=os.getenv("TILE_VER"))
+
     hist = Tile.select(Tile.tile_id, Tile.target, Tile.ra, Tile.dec,
                        Tile.total_exptime,
                        Dither.pk, CompletionStatus.done,
@@ -112,6 +120,7 @@ def doneTiles():
                .join(CompletionStatus, JOIN.LEFT_OUTER)\
                .switch(Dither)\
                .join(Observation, JOIN.LEFT_OUTER)\
+               .where(Tile.version_pk == ver.pk)\
                .group_by(Tile.tile_id, Tile.target,
                          Dither.pk, CompletionStatus.done).dicts()
     return hist
