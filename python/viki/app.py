@@ -1,12 +1,10 @@
 #!/usr/bin/env/python
 
-import sys
 from logging import getLogger, ERROR
 
 import psycopg2
 from quart import Quart, render_template
 
-from viki import observatory
 from viki.controllers import getTemplateDictBase
 
 getLogger('quart.serving').setLevel(ERROR)
@@ -56,6 +54,7 @@ from viki.controllers.summary import mjdSummary
 from viki.controllers.tileDetail import tileDetail_page
 from viki.controllers.tileQuery import tileQuery_page
 from viki.controllers.progress import progress_page
+from viki.controllers.changeStatus import changeStatus_page
 
 app.register_blueprint(index_page)
 app.register_blueprint(localSource)
@@ -63,7 +62,7 @@ app.register_blueprint(mjdSummary)
 app.register_blueprint(tileDetail_page)
 app.register_blueprint(tileQuery_page)
 app.register_blueprint(progress_page)
-
+app.register_blueprint(changeStatus_page)
 
 @app.errorhandler(404)
 async def page_not_found(e):

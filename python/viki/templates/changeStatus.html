@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% set active_page = "changeStatus" %}
+
+{% block head %}
+  <meta name="robots" content="noindex" />
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+  <title>Tile Query</title>
+  <meta http-equiv="refresh" CONTENT="600"/>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font: 16px Arial;  
+  }
+
+  /*the container must be positioned relative:*/
+  .autocomplete {
+    position: relative;
+    display: inline-block;
+  }
+
+  input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  input[type=text] {
+    background-color: #f1f1f1;
+    width: 100%;
+  }
+
+  input[type=submit] {
+    background-color: DodgerBlue;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff; 
+    border-bottom: 1px solid #d4d4d4; 
+  }
+
+  /*when hovering an item:*/
+  .autocomplete-items div:hover {
+    background-color: #e9e9e9; 
+  }
+
+  /*when navigating through the items using the arrow keys:*/
+  .autocomplete-active {
+    background-color: DodgerBlue !important; 
+    color: #ffffff; 
+  }
+</style>
+
+{% endblock head %}
+
+{% block body %}
+
+<div class="card">
+<form autocomplete="off" action="/changeStatus.html">
+  <div class="form-row">
+    <div class="form-group col-md-10">
+      <label for="tiles">Tile IDs (comma seperated)</label>
+      <input id="tiles" name="tiles" type="text" class="form-control" {% if tile_ids|length > 0 %} value="{% for t in tile_ids %}{{t}}, {% endfor %}"{% endif %}>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-10">
+      <label for="exp_no">Exposure Numbers (comma seperated)</label>
+      <input id="exp_no" name="exp_no" type="text" class="form-control" {% if exp_nos|length > 0 %} value="{% for e in exp_nos %}{{e}}, {% endfor %}"{% endif %}>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit Query</button>
+</form>
+</div>
+
+
+<div class="card card-nav-tabs">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Tile ID</th>
+        <th>Dither Pos</th>
+        <th>Exposure No</th>
+        <th>Done</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for dither in dithers %}
+        <tr>
+          <td><a href="tileDetail.html?tile_id={{dither.tile_id}}">{{dither.tile_id}}</a></td>
+          <td>{{dither.position}}</td>
+          <td>{{dither.exposure_no}}</td>
+          <td id="{{dither.tile_id}}-{{dither.position}}-status" {% if dither.done %}style="color:green"{% endif %}>{{dither.done}}</td>
+          <td>
+            <button type="button" title="set done" class="btn btn-success" 
+            onclick="updateStatus({{dither.tile_id}}, {{dither.position}}, 'done')">
+              <i class="material-icons">thumb_up_off_alt</i>
+          </button>
+          </td>
+          <td>
+            <button type="button" title="set not done" class="btn btn-danger" 
+            onclick="updateStatus({{dither.tile_id}}, {{dither.position}}, 'not')">
+              <i class="material-icons">thumb_down_off_alt</i>
+          </button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function updateStatus(tile_id, dither, status){
+    let args = "?tile_id=" + tile_id;
+    args += "&dither=" + dither;
+    args += "&status=" + status;
+    $.getJSON('/updateStatus/' + args, function (status) {
+      if (status == "failed"){
+        alert("Something went wrong!")
+      }
+      else{
+        let divName = tile_id + "-" + dither + "-" + 'status';
+        let statusText = document.getElementById(divName);
+        if (status == "done"){
+          statusText.innerText = "true";
+          statusText.style.color = "green";
+        }
+        else{
+          statusText.innerText = "false";
+          statusText.style.color = "black";
+        }
+      }
+    });
+  };
+</script>
+
+{% endblock body %}

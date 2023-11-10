@@ -124,3 +124,37 @@ def doneTiles():
                .group_by(Tile.tile_id, Tile.target,
                          Dither.pk, CompletionStatus.done).dicts()
     return hist
+
+
+def tileStatus(tile_ids=[], exp_nos=[]):
+    """grab everything that's done
+    """
+
+    ver = Version.get(label=os.getenv("TILE_VER"))
+
+    done = Tile.select(Tile.tile_id, Exposure.exposure_no,
+                       Dither.position, CompletionStatus.done)\
+               .join(Dither, JOIN.LEFT_OUTER)\
+               .join(CompletionStatus, JOIN.LEFT_OUTER)\
+               .switch(Dither)\
+               .join(Observation, JOIN.LEFT_OUTER)\
+               .join(Exposure)\
+               .where(Tile.version_pk == ver.pk).limit(20)
+
+    if len(tile_ids) > 0:
+        done = done.where(Tile.tile_id << tile_ids)
+    if len(exp_nos) > 0:
+        done = done.where(Exposure.exposure_no << exp_nos)
+
+    return done.dicts()
+
+
+def updateTileStatus(tile_id, dither, done):
+    statuses = CompletionStatus.select(CompletionStatus.pk)\
+               .join(Dither).join(Tile)\
+               .where(Tile.tile_id == tile_id,
+                      Dither.position == dither)
+
+    res = CompletionStatus.update(done=done)\
+          .where(CompletionStatus.pk << statuses).execute()
+    return res
