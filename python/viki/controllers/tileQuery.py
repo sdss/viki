@@ -3,7 +3,7 @@
 from quart import render_template, Blueprint, request
 
 from viki import wrapBlocking
-from viki.dbConvenience import findTiles
+from viki.dbConvenience import findTiles, listTargets
 
 from . import getTemplateDictBase
 
@@ -19,6 +19,10 @@ async def tile():
     dec = None
     radius = None
     tile_ids = []
+    target = None
+    returnObserved = False
+
+    print(request.args)
 
     if request.args:
         if "tiles" in request.args:
@@ -41,9 +45,21 @@ async def tile():
                 ra = None
                 dec = None
                 radius = None
+        if "returnObserved" in request.args:
+            returnObserved = True
+        if "target" in request.args:
+            t_text = request.args["target"]
+            if len(t_text) > 0:
+                target = t_text
 
     tiles = await wrapBlocking(findTiles, ra=ra, dec=dec,
-                               radius=radius, tile_ids=tile_ids)
+                               radius=radius, tile_ids=tile_ids,
+                               target=target, returnObserved=returnObserved)
+
+    targets = await wrapBlocking(listTargets)
+
+    if not target:
+        target = "none"
 
     for t in tiles:
         t["total_exptime"] = int(t["total_exptime"] / 900)
@@ -54,7 +70,10 @@ async def tile():
                          "ra": ra,
                          "dec": dec,
                          "radius": radius,
-                         "tile_ids": tile_ids
-    })
+                         "tile_ids": tile_ids,
+                         "chosenTarget": target,
+                         "returnObserved": returnObserved,
+                         "targets": targets
+                         })
 
     return await render_template("tileQuery.html", **templateDict)

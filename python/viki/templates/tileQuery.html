@@ -6,7 +6,6 @@
   <meta name="robots" content="noindex" />
   <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
   <title>Tile Query</title>
-  <meta http-equiv="refresh" CONTENT="600"/>
 
 <style>
   * {
@@ -76,6 +75,8 @@
 
 {% block body %}
 
+<script src="../static/js/autoComplete.js"></script>
+
 <div class="card">
 <form autocomplete="off" action="/tileQuery.html">
   <div class="form-row">
@@ -85,18 +86,26 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-10">
       <div class="form-group col-md-3">
+        <label for="targetSelect">Target</label>
+        <input id="targetSelect" type="text" name="target" {% if chosenTarget != "none" %} value="{{chosenTarget}}" {% else %} placeholder="target" {% endif %}>
+      </div>
+      <div class="form-group col-md-2">
         <label for="ra">RA</label>
         <input id="ra" type="text" name="ra" value={% if ra %}"{{ra}}"{% endif %}>
       </div>
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-2">
         <label for="dec">Dec</label>
         <input id="dec" type="text" name="dec" value={% if dec %}"{{dec}}"{% endif %}>
       </div>
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-2">
         <label for="radius">Search Radius</label>
         <input id="radius" type="text" name="radius" value={% if radius %}"{{radius}}"{% endif %}>
+      </div>
+      <div class="form-group col-md-2">
+        <input type="checkbox" id="returnObserved" name="returnObserved" {% if returnObserved %} checked="" {% endif %}>
+        <label for="returnObserved">Search observed tiles</label>
       </div>
     </div>
   </div>
@@ -129,5 +138,12 @@
     </tbody>
   </table>
 </div>
+
+
+<script>
+  var targets = [{% for t in targets %} "{{t}}", {% endfor %}];
+
+  autocomplete(document.getElementById("targetSelect"), targets);
+</script>
 
 {% endblock body %}

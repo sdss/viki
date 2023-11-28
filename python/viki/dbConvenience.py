@@ -64,7 +64,8 @@ def tileInfo(tile_id):
     return tile, dithers.dicts()
 
 
-def findTiles(ra=None, dec=None, radius=None, tile_ids=None):
+def findTiles(ra=None, dec=None, radius=None, tile_ids=None,
+              target=None, returnObserved=False):
     """
     return tiles matching criteria
     """
@@ -96,6 +97,12 @@ def findTiles(ra=None, dec=None, radius=None, tile_ids=None):
         ver = Version.get(label=os.getenv("TILE_VER"))
         tileQuery = tileQuery.where(Tile.version_pk == ver.pk)
     
+    if target:
+        tileQuery = tileQuery.where(Tile.target == target)
+    
+    if returnObserved:
+        tileQuery = tileQuery.where(dithersDone > 0)
+
     if redFlag:
         tileQuery = tileQuery.limit(10)
     else:
@@ -158,3 +165,10 @@ def updateTileStatus(tile_id, dither, done):
     res = CompletionStatus.update(done=done)\
           .where(CompletionStatus.pk << statuses).execute()
     return res
+
+def listTargets():
+    ver = Version.get(label=os.getenv("TILE_VER"))
+    targets = Tile.select(fn.Distinct(Tile.target))\
+                  .where(Tile.version_pk == ver.pk)
+    
+    return [t.target for t in targets]
