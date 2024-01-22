@@ -139,7 +139,8 @@ def tileStatus(tile_ids=[], exp_nos=[]):
 
     ver = Version.get(label=os.getenv("TILE_VER"))
 
-    done = Tile.select(Tile.tile_id, Exposure.exposure_no,
+    done = Tile.select(Tile.tile_id, 
+                       Exposure.exposure_no, Exposure.exposure_time,
                        Dither.position, CompletionStatus.done)\
                .join(Dither, JOIN.LEFT_OUTER)\
                .join(CompletionStatus, JOIN.LEFT_OUTER)\
