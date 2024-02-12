@@ -211,7 +211,7 @@
 
   function copyFracCompTable(){
     var tab = document.getElementById('jsfracComplete');
-    navigator.clipboard.writeText(tab.innerText);
+    navigator.clipboard.writeText(tab.innerText.replaceAll("\t", " "));
     alert("Copied table to clipboard! \nWatch out for tabs!");
   }
 
