@@ -9,7 +9,7 @@
 
 {% block body %}
 
-<div class="row"></div>
+<div class="row">
   <div class="col-md-6">
     <div class="row">
       <div class="col-md-12">
@@ -30,7 +30,11 @@
     <div class="card">
       <div id="map"></div>
     </div>
-  </div>
+    <div class="card">
+      <div id="fracTable">
+        <button type="button" class="btn btn-default"  onclick="createFracCompTable()">Create Fractional Completion Table</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -144,6 +148,64 @@
         {% endfor %}
       ]
     });
+
+  function createFracCompTable(){
+    
+    var headers = ['MJD'];
+    var mjds = [];
+    var data = [];
+
+    let subData = [];
+    let prog = [];
+
+    {% for targ in fractional %}
+      mjds = [];
+      headers.push('{{targ}}');
+      subData = [];
+
+      prog = {{fractional[targ] | tojson}};
+      for (i=0;i<prog.length;i++){
+        mjds.push(prog[i][0]);
+        subData.push(prog[i][1]*100.0);
+      }
+      data.push(subData);
+    {% endfor %}
+
+    drawDiv = document.getElementById('fracTable');
+
+    tbl = document.createElement('table');
+
+    var tr = tbl.insertRow();
+    for (let j = 0; j < headers.length; j++) {
+      var td = tr.insertCell();
+      if (j == headers.length - 1){
+        td.appendChild(document.createTextNode(headers[j]));
+      }
+      else{
+        td.appendChild(document.createTextNode(headers[j] + ",   "));
+      }
+    }
+
+    for (let i = 0; i < mjds.length; i++) {
+      var tr = tbl.insertRow();
+      for (let j = 0; j < headers.length; j++) {
+        var td = tr.insertCell();
+        if (j === 0) {
+          td.appendChild(document.createTextNode(mjds[i] + ",   "));
+        } else if (j == headers.length - 1){
+          td.style.textAlign = "right";
+          td.style.width = "75px";
+          td.appendChild(document.createTextNode(data[j - 1][i].toFixed()));
+        }
+        else {
+          td.style.textAlign = "right";
+          td.style.width = "75px";
+          td.appendChild(document.createTextNode(data[j - 1][i].toFixed() + ",   "));
+        }
+      }
+    }
+    drawDiv.appendChild(tbl);
+  }
 
 </script>
 
