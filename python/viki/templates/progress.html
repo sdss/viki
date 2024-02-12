@@ -33,6 +33,7 @@
     <div class="card">
       <div id="fracTable">
         <button type="button" class="btn btn-default"  onclick="createFracCompTable()">Create Fractional Completion Table</button>
+        <button type="button" class="btn btn-default"  onclick="copyFracCompTable()">Copy to Clipboard</button>
       </div>
     </div>
   </div>
@@ -174,6 +175,7 @@
     drawDiv = document.getElementById('fracTable');
 
     tbl = document.createElement('table');
+    tbl.setAttribute('id','jsfracComplete')
 
     var tr = tbl.insertRow();
     for (let j = 0; j < headers.length; j++) {
@@ -205,6 +207,12 @@
       }
     }
     drawDiv.appendChild(tbl);
+  }
+
+  function copyFracCompTable(){
+    var tab = document.getElementById('jsfracComplete');
+    navigator.clipboard.writeText(tab.innerText);
+    alert("Copied table to clipboard! \nWatch out for tabs!");
   }
 
 </script>
