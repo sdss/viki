@@ -5,7 +5,7 @@ import pandas as pd
 
 from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather, Exposure,
                                           Tile, Dither, CompletionStatus,
-                                          Version)
+                                          Version, AGCamFrame)
 
 
 def recentObs(jd=None):
@@ -23,7 +23,11 @@ def recentObs(jd=None):
     
     dataframe = pd.DataFrame(obs.dicts())
 
-    return dataframe
+    zeropoint_query = AGCamFrame.select(AGCamFrame.zero_point).tuples()
+
+    zeropoints = [float(z[0]) for z in zeropoint_query if z[0]]
+
+    return dataframe, zeropoints
 
 
 def queryTonight(jd):

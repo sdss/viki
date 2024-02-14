@@ -31,7 +31,13 @@ async def index():
 
     summary = [[t["tile_id"], t["position"], t["target"]] for t in tonight]
 
-    obs = await wrapBlocking(recentObs)
+    obs, zeropoints = await wrapBlocking(recentObs)
+
+    ZP0 = -23.25
+
+    transp = np.power(10, -0.4*(np.array(zeropoints) - ZP0))
+
+    # transp = np.clip(transp, 0, 1)
 
     mjds = np.array([int(i - 2400000.5) for i in obs["jd"]])
 
@@ -48,6 +54,7 @@ async def index():
         "hz": [i for i in obs["hz"]],
         "alt": [i for i in obs["alt"]],
         "seeing": [i for i in obs["seeing"]],
+        "transparency": list(transp),
         "summary": summary,
         "mjd": sjd_ish,
         "recentMjds": recentMjds

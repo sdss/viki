@@ -71,6 +71,7 @@
     <div class="card">
       <div id="jd"></div>
       <div id="lst"></div>
+      <div id="transparency"></div>
     </div>
   </div>
   <div class="col-md-4">
@@ -118,6 +119,8 @@
   drawHist(hz, "hz", "hz");
   var alt = {{alt | tojson}};
   drawHist(alt, "alt", "alt");
+  var transparency = {{transparency | tojson}};
+  drawHist(transparency, "transparency", "transparency");
   // var seeing = {{seeing | tojson}};
   // drawHist(seeing, "seeing", "seeing");
 
