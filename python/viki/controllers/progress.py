@@ -20,8 +20,6 @@ async def progress():
     # actually done dithers, so x9 for some tiles
     done = await wrapBlocking(doneTiles)
     
-    "MW*", "SMC*", "LMC*", "ORION*", "Gum*"
-
     targ_counts ={
         "MW": 0,
         "MCs": 0,
@@ -61,6 +59,8 @@ async def progress():
     min_mjd = 99999
     max_mjd = 0
 
+    tile_list = [["tile_id", "target", "jd", "position"]]
+
     for d in done:
         if "MW" in d["target"] or "THOR" in d["target"]:
             targ = "MW"
@@ -86,6 +86,7 @@ async def progress():
             max_mjd = mjd
         targ_mjds[targ].append(mjd)
         targ_coords[targ].append({"x": d["ra"], "y": d["dec"], "name": d["tile_id"]})
+        tile_list.append([d['tile_id'], d['target'], d['jd'], d['position']])
 
     x_axis = np.arange(min_mjd, max_mjd, 1)
     x_axis = [int(m) for m in x_axis]
@@ -117,7 +118,8 @@ async def progress():
         "fractional": fractional,
         "targ_coords": targ_coords,
         "targ_coords_all": targ_coords_all,
-        "full_survey_count": len(all_targs)
+        "full_survey_count": len(all_targs),
+        "tile_list": tile_list
     })
 
     return await render_template("progress.html", **templateDict)

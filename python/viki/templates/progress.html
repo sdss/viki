@@ -25,6 +25,30 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h3>Completed Dithers Summary</h3>
+          </div>
+          <button type="button" class="btn btn-default"  onclick="copydoneTilesTable()">Copy to Clipboard</button>
+          <div>
+            <table class="table" id="doneTiles" style="height: 500px; overflow-y:scroll; display:block;">
+              <tbody>
+                {% for t in tile_list %}
+              <tr>
+                <td style="textAlign: right; width: 75px;">{{t[0]}},</td>
+                <td style="textAlign: right; width: 75px;">{{t[1]}},</td>
+                <td style="textAlign: right; width: 75px;">{{t[2]}},</td>
+                <td style="textAlign: right; width: 75px;">{{t[3]}}</td>
+              </tr>
+            {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="col-md-6">
     <div class="card">
@@ -212,9 +236,15 @@
   function copyFracCompTable(){
     var tab = document.getElementById('jsfracComplete');
     navigator.clipboard.writeText(tab.innerText.replaceAll("\t", " "));
-    alert("Copied table to clipboard! \nWatch out for tabs!");
+    alert("Copied table to clipboard!");
   }
 
+  function copydoneTilesTable(){
+    var tab = document.getElementById('doneTiles');
+    navigator.clipboard.writeText(tab.innerText.replaceAll("\t", " "));
+    alert("Copied table to clipboard!");
+  }
+  
 </script>
 
 {% endblock body %}

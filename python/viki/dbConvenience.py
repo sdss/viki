@@ -124,7 +124,7 @@ def doneTiles():
     ver = Version.get(label=os.getenv("TILE_VER"))
 
     hist = Tile.select(Tile.tile_id, Tile.target, Tile.ra, Tile.dec,
-                       Tile.total_exptime,
+                       Tile.total_exptime, Dither.position,
                        Dither.pk, CompletionStatus.done,
                        fn.Max(Observation.jd).alias("jd"))\
                .join(Dither, JOIN.LEFT_OUTER)\
