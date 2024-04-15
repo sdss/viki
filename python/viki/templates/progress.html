@@ -148,6 +148,9 @@
       series: [
         {% for targ in targ_coords %} 
         {
+          {% if targ_coords[targ] | length > 900 %}
+          turboThreshold: {{targ_coords[targ] | length + 100}},
+          {% endif %}
           name: '{{targ}}',
           id: '{{targ}}',
           marker: {
