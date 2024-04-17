@@ -30,7 +30,7 @@ async def changeStatus():
                     else:
                         tile_ids = [int(t_text)]
                 except:
-                    errors.append("invalid design input")
+                    errors.append("invalid tile id input")
                     tile_ids = list()
         if "exp_no" in request.args:
             e_text = request.args["exp_no"]
@@ -41,7 +41,7 @@ async def changeStatus():
                     else:
                         exp_nos = [int(e_text)]
                 except:
-                    errors.append("invalid design input")
+                    errors.append("invalid exp no input")
                     exp_nos = list()
     
     stat = await wrapBlocking(tileStatus, tile_ids=tile_ids, 

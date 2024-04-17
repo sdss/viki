@@ -171,9 +171,45 @@ def updateTileStatus(tile_id, dither, done):
           .where(CompletionStatus.pk << statuses).execute()
     return res
 
+
 def listTargets():
     ver = Version.get(label=os.getenv("TILE_VER"))
     targets = Tile.select(fn.Distinct(Tile.target))\
                   .where(Tile.version_pk == ver.pk)
     
     return [t.target for t in targets]
+
+
+def disabledTiles(tile_ids=[]):
+    """grab everything that's done
+    """
+
+    ver = Version.get(label=os.getenv("TILE_VER"))
+
+    tiles = Tile.select(Tile.tile_id, 
+                        Tile.disabled)\
+                .where(Tile.version_pk == ver.pk)
+
+    if len(tile_ids) > 0:
+        tiles = tiles.where(Tile.tile_id << tile_ids |
+                          Tile.disabled)
+    else:
+        tiles = tiles.where(Tile.disabled)
+
+    return tiles.dicts()
+
+
+def disableTile(tile_id, disable=True):
+    """
+    enable or disable a tile
+    """
+
+    # TODO: this is a bit hacky
+    # maybe make admin user default?
+    Tile._meta.database.connect()
+    Tile._meta.database.become_admin()
+
+    N = Tile.update(disabled=disable)\
+            .where(Tile.tile_id==tile_id).execute()
+
+    return N

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% set active_page = "disabled" %}
+
+{% block head %}
+  <meta name="robots" content="noindex" />
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+  <title>Change Status</title>
+  <meta http-equiv="refresh" CONTENT="600"/>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font: 16px Arial;  
+  }
+
+  /*the container must be positioned relative:*/
+  .autocomplete {
+    position: relative;
+    display: inline-block;
+  }
+
+  input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  input[type=text] {
+    background-color: #f1f1f1;
+    width: 100%;
+  }
+
+  input[type=submit] {
+    background-color: DodgerBlue;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff; 
+    border-bottom: 1px solid #d4d4d4; 
+  }
+
+  /*when hovering an item:*/
+  .autocomplete-items div:hover {
+    background-color: #e9e9e9; 
+  }
+
+  /*when navigating through the items using the arrow keys:*/
+  .autocomplete-active {
+    background-color: DodgerBlue !important; 
+    color: #ffffff; 
+  }
+</style>
+
+{% endblock head %}
+
+{% block body %}
+
+<div class="card">
+<form autocomplete="off" action="/disabled.html">
+  <div class="form-row">
+    <div class="form-group col-md-10">
+      <label for="tiles">Tile IDs (comma seperated)</label>
+      <input id="tiles" name="tiles" type="text" class="form-control" {% if tile_ids|length > 0 %} value="{% for t in tile_ids %}{{t}}, {% endfor %}"{% endif %}>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit Query</button>
+</form>
+</div>
+
+
+<div class="card card-nav-tabs">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Tile ID</th>
+        <th>Disabled</th>
+        <th>Enable</th>
+        <th>Disable</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tile in tiles %}
+        <tr>
+          <td><a href="tileDetail.html?tile_id={{tile.tile_id}}">{{tile.tile_id}}</a></td>
+          <td id="{{tile.tile_id}}-disabled" {% if tile.disabled %}style="color:red"{% endif %}>{{tile.disabled}}</td>
+          <td>
+            <button type="button" title="enable" class="btn btn-success" 
+            onclick="disableTile({{tile.tile_id}}, false)"
+            id="{{tile.tile_id}}-enable-button"
+            {% if not tile.disabled %} disabled {% endif %}>
+              <i class="material-icons">thumb_up_off_alt</i>
+          </button>
+          </td>
+          <td>
+            <button type="button" title="disable" class="btn btn-danger" 
+            onclick="disableTile({{tile.tile_id}}, true)"
+            id="{{tile.tile_id}}-disable-button"
+            {% if tile.disabled %} disabled {% endif %}>
+              <i class="material-icons">thumb_down_off_alt</i>
+          </button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function disableTile(tile_id, disable){
+    let args = "?tile_id=" + tile_id;
+    args += "&disable=" + disable;
+    $.getJSON('/disableTile/' + args, function (status) {
+      if (status == "failed"){
+        alert("Something went wrong!")
+      }
+      else{
+        let enableBtnName = tile_id + "-enable-button";
+        let enableButton = document.getElementById(enableBtnName);
+        let disableBtnName = tile_id + "-disable-button";
+        let disableButton = document.getElementById(disableBtnName);
+        let divName = tile_id + "-" + 'disabled';
+        let statusText = document.getElementById(divName);
+        if (status == "disabled"){
+          statusText.innerText = "true";
+          statusText.style.color = "red";
+          enableButton.disabled = false;
+          disableButton.disabled = true;
+        }
+        else{
+          statusText.innerText = "false";
+          statusText.style.color = "black";
+          enableButton.disabled = true;
+          disableButton.disabled = false;
+        }
+      }
+    });
+  };
+</script>
+
+{% endblock body %}

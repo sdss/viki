@@ -55,6 +55,7 @@ from viki.controllers.tileDetail import tileDetail_page
 from viki.controllers.tileQuery import tileQuery_page
 from viki.controllers.progress import progress_page
 from viki.controllers.changeStatus import changeStatus_page
+from viki.controllers.disable import disable_page
 
 app.register_blueprint(index_page)
 app.register_blueprint(localSource)
@@ -63,6 +64,7 @@ app.register_blueprint(tileDetail_page)
 app.register_blueprint(tileQuery_page)
 app.register_blueprint(progress_page)
 app.register_blueprint(changeStatus_page)
+app.register_blueprint(disable_page)
 
 @app.errorhandler(404)
 async def page_not_found(e):
