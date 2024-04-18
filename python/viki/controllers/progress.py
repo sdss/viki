@@ -59,7 +59,7 @@ async def progress():
     min_mjd = 99999
     max_mjd = 0
 
-    tile_list = [["tile_id", "target", "jd", "position"]]
+    tile_list = [["tile_id", "target", "jd", "dither_pos", "ra", "dec"]]
 
     for d in done:
         if "MW" in d["target"] or "THOR" in d["target"]:
@@ -86,7 +86,8 @@ async def progress():
             max_mjd = mjd
         targ_mjds[targ].append(mjd)
         targ_coords[targ].append({"x": d["ra"], "y": d["dec"], "name": d["tile_id"]})
-        tile_list.append([d['tile_id'], d['target'], d['jd'], d['position']])
+        tile_list.append([d['tile_id'], d['target'], d['jd'], d['position'],
+                          f"{d['ra']:.2f}", f"{d['dec']:.2f}"])
 
     x_axis = np.arange(min_mjd, max_mjd, 1)
     x_axis = [int(m) for m in x_axis]
