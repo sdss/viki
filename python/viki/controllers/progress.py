@@ -95,6 +95,9 @@ async def progress():
     cumulative = {}
     fractional = {}
 
+    all_targs = []
+    survey_counts = 0
+
     for k, v in targ_mjds.items():
         mjds = np.array(v)
         counts = [[m, len(np.where(mjds < m)[0])] for m in x_axis]
@@ -103,10 +106,7 @@ async def progress():
         frac = [[m, len(np.where(mjds < m)[0])/planned] for m in x_axis]
         fractional[k] = frac
 
-    all_targs = []
-    survey_counts = 0
-    for k in ["MW", "MCs", "ORI", "GUM"]:
-        all_targs.extend(targ_mjds[k])
+        all_targs.extend(v)
         survey_counts += targ_counts[k]
 
     all_targs = np.array(all_targs)
