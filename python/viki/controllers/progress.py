@@ -22,6 +22,7 @@ async def progress():
     
     targ_counts ={
         "MW": 0,
+        "THOR": 0,
         "MCs": 0,
         "ORI": 0,
         "FULLSKY": 0,
@@ -31,6 +32,7 @@ async def progress():
 
     targ_mjds = {
         "MW": [],
+        "THOR": [],
         "MCs": [],
         "ORI": [],
         "FULLSKY": [],
@@ -40,6 +42,7 @@ async def progress():
 
     targ_coords = {
         "MW": [],
+        "THOR": [],
         "MCs": [],
         "ORI": [],
         "FULLSKY": [],
@@ -49,6 +52,7 @@ async def progress():
 
     targ_coords_all = {
         "MW": [],
+        "THOR": [],
         "MCs": [],
         "ORI": [],
         "FULLSKY": [],
@@ -61,9 +65,13 @@ async def progress():
 
     tile_list = [["tile_id", "target", "jd", "dither_pos", "ra", "dec"]]
 
+    ids = list()
+
     for d in done:
-        if "MW" in d["target"] or "THOR" in d["target"]:
+        if "MW" in d["target"]:
             targ = "MW"
+        elif "THOR" in d["target"]:
+            targ = "THOR"
         elif "MC" in d["target"]:
             targ = "MCs"
         elif "ORI" in d["target"]:
@@ -74,7 +82,9 @@ async def progress():
             targ = "GUM"
         else:
             targ = "LV"
-        targ_counts[targ] += int(d["total_exptime"]/900)
+        if d["tile_id"] not in ids:
+            ids.append(d["tile_id"])
+            targ_counts[targ] += int(d["total_exptime"]/900)
         if targ != "FULLSKY":
             targ_coords_all[targ].append([d["ra"], d["dec"]])
         if not d["jd"]:
@@ -105,6 +115,8 @@ async def progress():
         planned = targ_counts[k]
         frac = [[m, len(np.where(mjds < m)[0])/planned] for m in x_axis]
         fractional[k] = frac
+
+        # print(f"{k}, {len(mjds)}, {planned}")
 
         all_targs.extend(v)
         survey_counts += targ_counts[k]

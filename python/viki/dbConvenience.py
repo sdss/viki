@@ -126,13 +126,15 @@ def doneTiles():
     hist = Tile.select(Tile.tile_id, Tile.target, Tile.ra, Tile.dec,
                        Tile.total_exptime, Dither.position,
                        Dither.pk, CompletionStatus.done,
+                       Tile.version_pk,
                        fn.Max(Observation.jd).alias("jd"))\
                .join(Dither, JOIN.LEFT_OUTER)\
                .join(CompletionStatus, JOIN.LEFT_OUTER)\
                .switch(Dither)\
                .join(Observation, JOIN.LEFT_OUTER)\
                .where(Tile.version_pk == ver.pk)\
-               .group_by(Tile.tile_id, Tile.target,
+               .group_by(Tile.tile_id, Tile.target, Tile.total_exptime,
+                         Tile.ra, Tile.dec, Dither.position,
                          Dither.pk, CompletionStatus.done).dicts()
     return hist
 
