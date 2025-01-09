@@ -41,23 +41,23 @@ async def progress():
     }
 
     targ_coords = {
-        "MW": [],
-        "THOR": [],
-        "MCs": [],
-        "ORI": [],
-        "FULLSKY": [],
-        "GUM": [],
-        "LV": []
+        "MW": {"x": [], "y": [], "name": []},
+        "THOR": {"x": [], "y": [], "name": []},
+        "MCs": {"x": [], "y": [], "name": []},
+        "ORI": {"x": [], "y": [], "name": []},
+        "FULLSKY": {"x": [], "y": [], "name": []},
+        "GUM": {"x": [], "y": [], "name": []},
+        "LV": {"x": [], "y": [], "name": []}
     }
 
     targ_coords_all = {
-        "MW": [],
-        "THOR": [],
-        "MCs": [],
-        "ORI": [],
-        "FULLSKY": [],
-        "GUM": [],
-        "LV": []
+        "MW": {"x": [], "y": [], "name": []},
+        "THOR": {"x": [], "y": [], "name": []},
+        "MCs": {"x": [], "y": [], "name": []},
+        "ORI": {"x": [], "y": [], "name": []},
+        "FULLSKY": {"x": [], "y": [], "name": []},
+        "GUM": {"x": [], "y": [], "name": []},
+        "LV": {"x": [], "y": [], "name": []}
     }
 
     min_mjd = 99999
@@ -86,7 +86,8 @@ async def progress():
             ids.append(d["tile_id"])
             targ_counts[targ] += int(d["total_exptime"]/900)
         if targ != "FULLSKY":
-            targ_coords_all[targ].append([d["ra"], d["dec"]])
+            targ_coords_all[targ]["x"].append(d["ra"])
+            targ_coords_all[targ]["y"].append(d["dec"])
         if not d["jd"]:
             continue
         mjd = d["jd"] - 2400000.5
@@ -95,7 +96,9 @@ async def progress():
         if mjd > max_mjd:
             max_mjd = mjd
         targ_mjds[targ].append(mjd)
-        targ_coords[targ].append({"x": d["ra"], "y": d["dec"], "name": d["tile_id"]})
+        targ_coords[targ]["x"].append(d["ra"])
+        targ_coords[targ]["y"].append(d["dec"])
+        targ_coords[targ]["name"].append(d["tile_id"])
         tile_list.append([d['tile_id'], d['target'], d['jd'], d['position'],
                           f"{d['ra']:.2f}", f"{d['dec']:.2f}"])
 

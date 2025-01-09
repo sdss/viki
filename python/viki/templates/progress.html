@@ -5,6 +5,8 @@
   <meta name="robots" content="noindex" />
   <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
   <title>Progress</title>
+
+  <script src='https://cdn.plot.ly/plotly-2.18.2.min.js'></script>
 {% endblock head %}
 
 {% block body %}
@@ -111,73 +113,63 @@
     ]
     });
 
-    Highcharts.chart('map', {
-      chart: { type: 'scatter', zoomType: 'xy'},
-      title: {text: '', align: 'center'},
-      xAxis: {title: {text: 'RA'}, min: 0, max: 360, reversed: true, tickInterval: 90},
-      yAxis: {title: {text: 'Dec'}, min: -90, max: 90, tickInterval: 30},
-      legend: {enabled: true},
-      plotOptions: {
-        scatter: {
-          marker: {
-            radius: 2.5,
-            symbol: 'circle',
-            states: {
-              hover: {
-                enabled: true,
-                lineColor: 'rgb(100,100,100)'
-              }
-            }
-          },
-          states: {
-            hover: {
-              marker: {
-                enabled: false
-              }
-            }
-          },
-        }
+    var data = [
+    {% for targ in targ_coords %} 
+    {
+      name: '{{targ}}',
+      id: '{{targ}}',
+      mode: 'markers',
+      marker: {
+        symbol: 'circle',
+        size: 3
       },
-      tooltip: {
-        // pointFormat: 'RA: {point.x} deg <br/> Dec: {point.y} deg'
-        formatter:function(){
-          let label = this.series.name 
-                      + ' </br> Tile ID ' + this.point.name
-                      + ' </br> RA: ' + this.x.toFixed(1)
-                      + '</br> Dec: ' + this.y.toFixed(1)
-          return label;}
+      x:{{targ_coords[targ]["x"] | tojson}},
+      y:{{targ_coords[targ]["y"] | tojson}},
+      text: {{targ_coords[targ]["name"] | tojson}},
+      showInLegend: true
+    },
+    {% endfor %}
+    {% for targ in targ_coords_all %} 
+    {
+      enableMouseTracking: false,
+      name: '{{targ}}',
+      mode: 'markers',
+      marker: {
+        symbol: 'circle',
+        color: 'rgba(0,0,0,0.1)',
+        size: 1
       },
-      series: [
-        {% for targ in targ_coords %} 
-        {
-          {% if targ_coords[targ] | length > 900 %}
-          turboThreshold: {{targ_coords[targ] | length + 100}},
-          {% endif %}
-          name: '{{targ}}',
-          id: '{{targ}}',
-          marker: {
-            symbol: 'circle'
-          },
-          data : {{targ_coords[targ] | tojson}},
-          showInLegend: true
-        },
-        {% endfor %}
-        {% for targ in targ_coords_all %} 
-        {
-          enableMouseTracking: false,
-          name: '{{targ}}',
-          id: '{{targ}}',
-          marker: {
-            symbol: 'circle',
-            fillColor: 'rgba(0,0,0,0.1)',
-            radius: 1
-          },
-          data : {{targ_coords_all[targ] | tojson}},
-          showInLegend: false
-        },
-        {% endfor %}
-      ]
-    });
+      x:{{targ_coords_all[targ]["x"] | tojson}},
+      y:{{targ_coords_all[targ]["y"] | tojson}},
+      text: {{targ_coords_all[targ]["name"] | tojson}},
+      showlegend: false
+    },
+    {% endfor %}
+    ];
+    
+    var layout = {
+     xaxis: {
+      zeroline: false,
+      hoverformat: '.1f',
+      range:[360, 0],
+      tick0: 360,
+      dtick: 90,
+      title:{'text': 'RA'}
+     },
+     yaxis: {
+      zeroline: false,
+      hoverformat: '.1f',
+      range: [-90, 50],
+      tick0: -90,
+      dtick: 30,
+      title:{'text': 'Dec'}
+     },
+     legend:{
+      itemsizing: 'constant',
+      orientation: 'h'
+     }
+    }
+    Plotly.newPlot('map', data, layout);
 
   function createFracCompTable(){
     
