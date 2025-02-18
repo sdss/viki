@@ -76,9 +76,9 @@
   </div>
   <div class="col-md-4">
     <div class="card">
+      <div id="disabled"></div>
       <div id="alt"></div>
       <div id="hz"></div>
-      <div id="seeing"></div>
     </div>
   </div>
 </div>
@@ -121,8 +121,8 @@
   drawHist(alt, "alt", "alt");
   var transparency = {{transparency | tojson}};
   drawHist(transparency, "transparency", "transparency");
-  // var seeing = {{seeing | tojson}};
-  // drawHist(seeing, "seeing", "seeing");
+  var disabled = {{disabled_count | tojson}};
+  drawHist(disabled, "disabled", "disabled");
 
 </script>
 

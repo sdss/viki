@@ -5,7 +5,7 @@ import pandas as pd
 
 from sdssdb.peewee.lvmdb.lvmopsdb import (Observation, Weather, Exposure,
                                           Tile, Dither, CompletionStatus,
-                                          Version, AGCamFrame)
+                                          Version, AGCamFrame, Disabled)
 
 
 def recentObs(jd=None):
@@ -186,17 +186,10 @@ def disabledTiles(tile_ids=[]):
     """grab everything that's done
     """
 
-    ver = Version.get(label=os.getenv("TILE_VER"))
-
-    tiles = Tile.select(Tile.tile_id, 
-                        Tile.disabled)\
-                .where(Tile.version_pk == ver.pk)
+    tiles = Disabled.select()
 
     if len(tile_ids) > 0:
-        tiles = tiles.where(Tile.tile_id << tile_ids |
-                          Tile.disabled)
-    else:
-        tiles = tiles.where(Tile.disabled)
+        tiles = tiles.where(Disabled.tile << tile_ids)
 
     return tiles.dicts()
 

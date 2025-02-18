@@ -102,21 +102,19 @@
     <tbody>
       {% for tile in tiles %}
         <tr>
-          <td><a href="tileDetail.html?tile_id={{tile.tile_id}}">{{tile.tile_id}}</a></td>
+          <td><a href="tileDetail.html?tile_id={{tile.tile}}">{{tile.tile}}</a></td>
           <td id="{{tile.tile_id}}-disabled" {% if tile.disabled %}style="color:red"{% endif %}>{{tile.disabled}}</td>
           <td>
             <button type="button" title="enable" class="btn btn-success" 
             onclick="disableTile({{tile.tile_id}}, false)"
-            id="{{tile.tile_id}}-enable-button"
-            {% if not tile.disabled %} disabled {% endif %}>
+            id="{{tile.tile}}-enable-button" disabled>
               <i class="material-icons">thumb_up_off_alt</i>
           </button>
           </td>
           <td>
             <button type="button" title="disable" class="btn btn-danger" 
             onclick="disableTile({{tile.tile_id}}, true)"
-            id="{{tile.tile_id}}-disable-button"
-            {% if tile.disabled %} disabled {% endif %}>
+            id="{{tile.tile}}-disable-button" disabled>
               <i class="material-icons">thumb_down_off_alt</i>
           </button>
           </td>

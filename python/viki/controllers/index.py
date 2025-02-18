@@ -6,7 +6,7 @@ from astropy.time import Time
 import numpy as np
 
 from viki import wrapBlocking
-from viki.dbConvenience import recentObs, queryTonight
+from viki.dbConvenience import recentObs, queryTonight, disabledTiles
 
 from . import getTemplateDictBase
 
@@ -38,6 +38,11 @@ async def index():
     transp = np.power(10, -0.4*(np.array(zeropoints) - ZP0))
 
     # transp = np.clip(transp, 0, 1)
+    disabled = await wrapBlocking(disabledTiles)
+    disabled_ids, disabled_counts = np.unique([d["tile"] for d in disabled],
+                                              return_counts=True)
+
+    disabled_counts = [int(d) for d in disabled_counts]
 
     mjds = np.array([int(i - 2400000.5) for i in obs["jd"]])
 
@@ -55,6 +60,7 @@ async def index():
         "alt": [i for i in obs["alt"]],
         "seeing": [i for i in obs["seeing"]],
         "transparency": list(transp),
+        "disabled_count": disabled_counts,
         "summary": summary,
         "mjd": sjd_ish,
         "recentMjds": recentMjds
