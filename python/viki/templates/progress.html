@@ -69,49 +69,86 @@
 
 <script type="text/javascript">
 
-    Highcharts.chart("dithers", {
-    chart: { zoomType: 'x' },
-    title: {text: "N Dithers Done; full survey is at {{full_survey_count}}"},
-    xAxis: { title: { text: 'MJD' } },
-    yAxis: [{ title: { text: 'Dithers' },
-                    plotLines: [{ value: 0, width: 1, color: '#bf371f' }]}],
-    tooltip: { crosshairs: true, shared: true },
-    series: [
-      {% for targ in cumulative %}
-      {
+var data = [
+    {% for targ in cumulative %} 
+    {
       name: '{{targ}}',
-      data: {{cumulative[targ] | tojson}},
-      showInLegend: true, 
+      id: '{{targ}}',
+      mode: 'lines+markers',
+      marker: {
+        symbol: 'circle',
+        size: 3
       },
-      {% endfor %}
-    ]
-    });
+      x:{{mjds | tojson}},
+      y:{{cumulative[targ]| tojson}},
+      text: '{{targ}}',
+      showInLegend: true
+    },
+    {% endfor %}
+    ];
 
-    Highcharts.chart("fractional", {
-    chart: { zoomType: 'x' },
-    title: {text: "Fractional Completion"},
-    xAxis: { title: { text: 'MJD' } },
-    yAxis: [{ title: { text: 'Percent Done' },
-                    plotLines: [{ value: 0, width: 1, color: '#bf371f' }],
-              labels:{
-                  formatter:function(){                    
-                      return ((this.value)*100).toFixed(1) + ' %';
-                  }
-              },
-           }],
-    tooltip: { crosshairs: true, 
-                formatter:function(){
-                      return (this.y*100).toFixed(1) + ' %'; }
-             },
-    series: [
-      {% for targ in fractional %}
-      {
+    var layout = {
+    title: {text: "N Dithers Done; full survey is at {{full_survey_count}}"},
+    xaxis: {
+      zeroline: false,
+      hoverformat: '.1f',
+      title:{'text': 'MJD'},
+      tickformat: ",.3r"
+     },
+    yaxis: {
+      zeroline: false,
+      hoverformat: '.1f',
+      title:{'text': 'Dithers'}
+     },
+    legend:{
+      itemsizing: 'constant',
+      orientation: 'h',
+      yref: 'paper',
+      y: -0.2
+     }
+    }
+    Plotly.newPlot('dithers', data, layout);
+    
+    var data = [
+    {% for targ in cumulative %} 
+    {
       name: '{{targ}}',
-      data: {{fractional[targ] | tojson}}
+      id: '{{targ}}',
+      mode: 'lines+markers',
+      marker: {
+        symbol: 'circle',
+        size: 3
       },
-      {% endfor %}
-    ]
-    });
+      x:{{mjds | tojson}},
+      y:{{fractional[targ]| tojson}},
+      text: '{{targ}}',
+      showInLegend: true
+    },
+    {% endfor %}
+    ];
+
+    var layout = {
+    title: {text: "Fractional Completion"},
+    xaxis: {
+      zeroline: false,
+      hoverformat: '.1f',
+      title:{'text': 'MJD'},
+      tickformat: ",.3r"
+     },
+    yaxis: {
+      zeroline: false,
+      hoverformat: '.1f',
+      title:{'text': 'Percent Done'},
+      tickformat: ".0%"
+     },
+    legend:{
+      itemsizing: 'constant',
+      orientation: 'h',
+      yref: 'paper',
+      y: -0.2
+     }
+    }
+    Plotly.newPlot('fractional', data, layout);
 
     var data = [
     {% for targ in targ_coords %} 
@@ -166,7 +203,9 @@
      },
      legend:{
       itemsizing: 'constant',
-      orientation: 'h'
+      orientation: 'h',
+      yref: 'paper',
+      y: -0.2
      }
     }
     Plotly.newPlot('map', data, layout);
