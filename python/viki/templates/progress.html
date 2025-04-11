@@ -213,21 +213,19 @@ var data = [
   function createFracCompTable(){
     
     var headers = ['MJD'];
-    var mjds = [];
+    var mjds =  {{mjds | tojson}};
     var data = [];
 
     let subData = [];
     let prog = [];
 
     {% for targ in fractional %}
-      mjds = [];
       headers.push('{{targ}}');
       subData = [];
 
       prog = {{fractional[targ] | tojson}};
       for (i=0;i<prog.length;i++){
-        mjds.push(prog[i][0]);
-        subData.push(prog[i][1]*100.0);
+        subData.push(prog[i]*100.0);
       }
       data.push(subData);
     {% endfor %}

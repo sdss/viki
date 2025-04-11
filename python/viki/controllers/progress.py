@@ -117,15 +117,11 @@ async def progress():
         planned = targ_counts[k]
         frac = [len(np.where(mjds < m)[0])/planned for m in x_axis]
         fractional[k] = frac
-
-        # print(f"{k}, {len(mjds)}, {planned}")
-
         all_targs.extend(v)
         survey_counts += targ_counts[k]
 
-    all_targs = np.array(all_targs)
-    counts = [[m, len(np.where(all_targs < m)[0])] for m in x_axis]
-    frac = [[m, len(np.where(all_targs < m)[0])/survey_counts] for m in x_axis]
+    all_targs = np.array(all_targs)\
+    frac = [len(np.where(all_targs < m)[0])/survey_counts for m in x_axis]
     fractional["Full Survey"] = frac
 
     templateDict.update({
