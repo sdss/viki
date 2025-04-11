@@ -120,7 +120,7 @@ async def progress():
         all_targs.extend(v)
         survey_counts += targ_counts[k]
 
-    all_targs = np.array(all_targs)\
+    all_targs = np.array(all_targs)
     frac = [len(np.where(all_targs < m)[0])/survey_counts for m in x_axis]
     fractional["Full Survey"] = frac
 
