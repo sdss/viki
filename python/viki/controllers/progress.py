@@ -1,5 +1,7 @@
 #!/usr/bin/env/python
 
+from collections import defaultdict
+
 import numpy as np
 from quart import render_template, Blueprint
 
@@ -65,7 +67,7 @@ async def progress():
 
     tile_list = [["tile_id", "target", "jd", "dither_pos", "ra", "dec"]]
 
-    ids = list()
+    ids = defaultdict(list)
 
     for d in done:
         if "MW" in d["target"]:
@@ -83,8 +85,14 @@ async def progress():
         else:
             targ = "LV"
         if d["tile_id"] not in ids:
-            ids.append(d["tile_id"])
+            ids[d["tile_id"]].append(d["position"])
             targ_counts[targ] += int(d["total_exptime"]/900)
+        elif d["position"] in ids[d["tile_id"]]:
+            continue
+        else:
+            if targ == "ORI":
+                print(ids[d["tile_id"]], d["position"])
+            ids[d["tile_id"]].append(d["position"])
         if targ != "FULLSKY":
             targ_coords_all[targ]["x"].append(d["ra"])
             targ_coords_all[targ]["y"].append(d["dec"])

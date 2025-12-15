@@ -127,15 +127,17 @@ def doneTiles():
                        Tile.total_exptime, Dither.position,
                        Dither.pk, CompletionStatus.done,
                        Tile.version_pk,
-                       fn.Max(Observation.jd).alias("jd"))\
+                       fn.min(Observation.jd).alias("jd"))\
                .join(Dither, JOIN.LEFT_OUTER)\
                .join(CompletionStatus, JOIN.LEFT_OUTER)\
                .switch(Dither)\
                .join(Observation, JOIN.LEFT_OUTER)\
-               .where(Tile.version_pk == ver.pk)\
+               .where(Tile.version_pk == ver.pk,
+                      ~Tile.target.contains('ancillary'))\
                .group_by(Tile.tile_id, Tile.target, Tile.total_exptime,
                          Tile.ra, Tile.dec, Dither.position,
-                         Dither.pk, CompletionStatus.done).dicts()
+                         Dither.pk, CompletionStatus.done)\
+               .order_by(Dither.pk).dicts()
     return hist
 
 
